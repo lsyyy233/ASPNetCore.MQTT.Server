@@ -16,10 +16,10 @@ namespace ASPNetCore.MQTT
 		private readonly IConfiguration configuration;
 		private readonly ILogger log;
 
-		public MqttHostService(IConfiguration configuration, ILoggerFactory loggerFactory, MqttService mqttService)
+		public MqttHostService(IConfiguration configuration, ILoggerFactory loggerFactory, CustomerMqttService customerMqttService)
 		{
 			this.configuration = configuration;
-			mqttServer = mqttService.GetMqttServer();
+			mqttServer = customerMqttService.GetMqttServer();
 			log = loggerFactory.CreateLogger<MqttHostService>();
 		}
 
@@ -48,7 +48,7 @@ namespace ASPNetCore.MQTT
 				.UseClientConnectedHandler(MqttNetServer_ClientConnected)//客户端连接事件
 				.UseClientDisconnectedHandler(MqttNetServer_ClientDisConnected);//客户端断开事件
 			await mqttServer.StartAsync(options);//启动服务
-			log.LogInformation($"MQTT service listening on {configuration.GetValue<int>("MQTTOption:Port")}");
+			log.LogInformation($"MQTT service listening ON {configuration.GetValue<int>("MQTTOption:Port")}");
 		}
 
 		public Task StopAsync(CancellationToken cancellationToken)

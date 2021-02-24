@@ -1,5 +1,7 @@
+using ASPNetCore.MQTT.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +31,8 @@ namespace ASPNetCore.MQTT
 				});
 			services.AddLogging();
 			services.AddHostedService<MqttHostService>();
-			services.AddSingleton<MqttService>();
+			services.AddSingleton<CustomerMqttService>();
+			services.AddSingleton<ClienetService>();
 
 
 		}
@@ -39,6 +42,17 @@ namespace ASPNetCore.MQTT
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler(appBuilder =>
+				{
+					appBuilder.Run(async context =>
+					{
+						context.Response.StatusCode = 500;
+						await context.Response.WriteAsync("Unexpected Error");
+					});
+				});
 			}
 			app.UseRouting(); ;
 			app.UseEndpoints(endpoints =>

@@ -3,18 +3,17 @@ using MQTTnet;
 using MQTTnet.Server;
 using System.Text;
 using System.Threading.Tasks;
-using MQTTnet.Protocol;
 
 namespace ASPNetCore.MQTT
 {
-	public class MqttService
+	public class CustomerMqttService
 	{
 		private static IMqttServer mqttServer;
 		private readonly ILogger log;
 
-		public MqttService(ILoggerFactory loggerFactory)
+		public CustomerMqttService(ILoggerFactory loggerFactory)
 		{
-			log = loggerFactory.CreateLogger<MqttService>();
+			log = loggerFactory.CreateLogger<CustomerMqttService>();
 		}
 
 		public IMqttServer GetMqttServer()
@@ -35,7 +34,7 @@ namespace ASPNetCore.MQTT
 				QualityOfServiceLevel = model.MqttQualityOfServiceLevel
 			};
 			await mqttServer.PublishAsync(message);
-			log.LogInformation($"MQTT Broker发布主题[{model.Topic}]成功！");
+			log.LogInformation($"MQTT Broker pushed topic [{model.Topic}] success!");
 		}
 	}
 }
